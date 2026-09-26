@@ -1,0 +1,24 @@
+{
+  "name": "mern-supermarket-pos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bilingual (EN/TA) POS, billing, stock and expense tracking system for a provisional supermarket. MERN stack.",
+  "scripts": {
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n SERVER,CLIENT -c blue,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "seed": "npm --prefix server run seed",
+    "seed:demo": "npm --prefix server run seed:demo",
+    "seed:reset": "npm --prefix server run seed:reset",
+    "lint": "npm --prefix client run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
