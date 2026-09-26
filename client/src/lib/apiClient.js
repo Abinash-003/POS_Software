@@ -2,6 +2,9 @@ import axios from "axios";
 
 export const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
+/** Absolute API host (Render) — cold starts need a longer timeout + wake ping. */
+const isRemoteApi = /^https?:\/\//i.test(API_BASE);
+
 /** Broadcast so the auth provider can drop a stale session from anywhere. */
 export const UNAUTHORIZED_EVENT = "sm:unauthorized";
 
@@ -32,7 +35,8 @@ export function clearAuthToken() {
 export const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
-  timeout: 20000,
+  // Render free tier can take 30–50s to wake; keep headroom.
+  timeout: isRemoteApi ? 55000 : 20000,
 });
 
 api.interceptors.request.use((config) => {
@@ -58,14 +62,37 @@ export class RequestError extends Error {
   }
 }
 
+function isRetryableNetworkError(error) {
+  if (!error) return false;
+  if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT" || error.code === "ERR_NETWORK") {
+    return true;
+  }
+  return !error.response;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const config = error.config || {};
+    const retries = config.__retries ?? 0;
+    const maxRetries = config.__maxRetries ?? (isRemoteApi ? 2 : 0);
+
+    // Cold-start / brief blips: retry a couple of times before surfacing "network".
+    if (isRetryableNetworkError(error) && retries < maxRetries) {
+      config.__retries = retries + 1;
+      await sleep(1200 * config.__retries);
+      return api.request(config);
+    }
+
     if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT") {
-      return Promise.reject(new RequestError("timeout"));
+      return Promise.reject(new RequestError(isRemoteApi ? "serverWaking" : "timeout"));
     }
     if (!error.response) {
-      return Promise.reject(new RequestError("network"));
+      return Promise.reject(new RequestError(isRemoteApi ? "serverWaking" : "network"));
     }
 
     const { status, data } = error.response;
@@ -113,4 +140,16 @@ export function assetUrl(path) {
   // Uploads live next to the API, which may sit on a different host than the UI.
   const base = API_BASE.replace(/\/api\/?$/, "");
   return `${base}${path}`;
+}
+
+/**
+ * Ping the API as soon as the UI loads so a sleeping Render instance starts
+ * waking before the user taps Login.
+ */
+export function wakeApiServer() {
+  if (!isRemoteApi) return Promise.resolve();
+  return api
+    .get("/health", { timeout: 60000, __maxRetries: 3 })
+    .then(() => true)
+    .catch(() => false);
 }

@@ -8,6 +8,10 @@ import { LanguageProvider } from "./i18n/LanguageProvider.jsx";
 import { ToastProvider } from "./context/ToastContext.jsx";
 import { ConfirmProvider } from "./context/ConfirmContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { wakeApiServer } from "./lib/apiClient.js";
+
+// Start waking the Render API immediately (cold start can take ~30–50s).
+wakeApiServer();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

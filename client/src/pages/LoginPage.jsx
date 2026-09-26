@@ -13,6 +13,7 @@ import { useLanguage } from "../i18n/LanguageProvider.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
 import { useErrorMessage } from "../hooks/useApiError.js";
+import { wakeApiServer } from "../lib/apiClient.js";
 import { LanguageToggle } from "../components/layout/LanguageToggle.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { Input, PasswordInput } from "../components/ui/Field.jsx";
@@ -55,6 +56,8 @@ export function LoginPage() {
 
     setSubmitting(true);
     try {
+      // If Render was asleep, finish waking before login so the first try succeeds.
+      await wakeApiServer();
       const user = await login({
         username: form.username.trim().toLowerCase(),
         password: form.password,

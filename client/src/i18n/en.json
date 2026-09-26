@@ -555,6 +555,7 @@
   },
   "errors": {
     "network": "Cannot reach the server. Check your connection and try again.",
+    "serverWaking": "Server is starting up. Wait a few seconds and try again.",
     "server": "Something went wrong on the server. Please try again.",
     "unauthorized": "Please sign in to continue",
     "noPermission": "You do not have permission for this action",
