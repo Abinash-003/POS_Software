@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { request, UNAUTHORIZED_EVENT } from "../lib/apiClient.js";
+import { request, UNAUTHORIZED_EVENT, setAuthToken, clearAuthToken } from "../lib/apiClient.js";
 
 const AuthContext = createContext(null);
 
@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       setStatus("authenticated");
     } catch {
+      clearAuthToken();
       setUser(null);
       setStatus("anonymous");
     }
@@ -25,6 +26,7 @@ export function AuthProvider({ children }) {
   // Any 401 from any screen drops the session so the router shows the login page.
   useEffect(() => {
     const handleUnauthorized = () => {
+      clearAuthToken();
       setUser(null);
       setStatus("anonymous");
     };
@@ -34,6 +36,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (credentials) => {
     const data = await request.post("/auth/login", credentials);
+    if (data.token) setAuthToken(data.token);
     setUser(data.user);
     setStatus("authenticated");
     return data.user;
@@ -43,6 +46,7 @@ export function AuthProvider({ children }) {
     try {
       await request.post("/auth/logout");
     } finally {
+      clearAuthToken();
       setUser(null);
       setStatus("anonymous");
     }

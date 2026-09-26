@@ -181,9 +181,11 @@ export function LoginPage() {
                 {submitting ? t("auth.loggingIn") : t("auth.loginBtn")}
               </Button>
 
-              <p className="rounded-xl bg-brand-50 px-3 py-2.5 text-center text-xs font-medium text-brand-700">
-                {t("auth.defaultHint")}
-              </p>
+              {import.meta.env.DEV ? (
+                <p className="rounded-xl bg-brand-50 px-3 py-2.5 text-center text-xs font-medium text-brand-700">
+                  {t("auth.defaultHint")}
+                </p>
+              ) : null}
             </form>
 
             <p className="mt-5 text-center text-xs text-ink-400 lg:text-left">

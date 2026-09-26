@@ -5,10 +5,43 @@ export const API_BASE = import.meta.env.VITE_API_URL || "/api";
 /** Broadcast so the auth provider can drop a stale session from anywhere. */
 export const UNAUTHORIZED_EVENT = "sm:unauthorized";
 
+const TOKEN_KEY = "sm_auth_token";
+
+/** Cross-origin deploys (Vercel → Render) cannot rely on cookies alone. */
+export function getAuthToken() {
+  try {
+    return window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setAuthToken(token) {
+  try {
+    if (token) window.localStorage.setItem(TOKEN_KEY, token);
+    else window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    /* private mode */
+  }
+}
+
+export function clearAuthToken() {
+  setAuthToken(null);
+}
+
 export const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
   timeout: 20000,
+});
+
+api.interceptors.request.use((config) => {
+  const token = getAuthToken();
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 /**
@@ -39,6 +72,7 @@ api.interceptors.response.use(
     const code = data?.error || (status >= 500 ? "server" : "invalidForm");
 
     if (status === 401) {
+      clearAuthToken();
       window.dispatchEvent(new CustomEvent(UNAUTHORIZED_EVENT));
     }
 

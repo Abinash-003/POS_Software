@@ -29,6 +29,14 @@ const clientOrigins = list(
     "http://localhost:5173,http://localhost:5174,http://localhost:4173,https://pos-software-ecru.vercel.app"
 );
 
+const isProd = process.env.NODE_ENV === "production";
+
+/** Vercel (or any https frontend) on a different host needs SameSite=None + Secure. */
+const crossSiteCookies =
+  process.env.COOKIE_SAMESITE === "none" ||
+  isProd ||
+  clientOrigins.some((origin) => /^https:\/\//i.test(origin) && !/localhost|127\.0\.0\.1/i.test(origin));
+
 /** Local Vite (any port) + configured CLIENT_ORIGIN + known live frontend. */
 export function isAllowedClientOrigin(origin) {
   if (!origin) return true;
@@ -53,7 +61,7 @@ export function isAllowedClientOrigin(origin) {
 
 export const config = {
   env: process.env.NODE_ENV || "development",
-  isProd: process.env.NODE_ENV === "production",
+  isProd,
   port: Number(process.env.PORT || 5000),
   mongoUri: required("MONGODB_URI"),
   jwt: {
@@ -61,6 +69,9 @@ export const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
     cookieName: process.env.COOKIE_NAME || "sm_token",
     cookieMaxAge: 1000 * 60 * 60 * 24 * 7,
+    /** Cross-site (Vercel → Render) auth cookie flags. */
+    sameSite: crossSiteCookies ? "none" : "lax",
+    secure: crossSiteCookies,
   },
   clientOrigins,
   paths: {

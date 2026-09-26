@@ -15,8 +15,8 @@ export function signToken(user) {
 export function setAuthCookie(res, token) {
   res.cookie(config.jwt.cookieName, token, {
     httpOnly: true,
-    sameSite: config.isProd ? "none" : "lax",
-    secure: config.isProd,
+    sameSite: config.jwt.sameSite,
+    secure: config.jwt.secure,
     path: "/",
     maxAge: config.jwt.cookieMaxAge,
   });
@@ -25,8 +25,8 @@ export function setAuthCookie(res, token) {
 export function clearAuthCookie(res) {
   res.clearCookie(config.jwt.cookieName, {
     httpOnly: true,
-    sameSite: config.isProd ? "none" : "lax",
-    secure: config.isProd,
+    sameSite: config.jwt.sameSite,
+    secure: config.jwt.secure,
     path: "/",
   });
 }
