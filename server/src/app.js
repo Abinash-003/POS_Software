@@ -6,7 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import { config } from "./config/env.js";
+import { config, isAllowedClientOrigin } from "./config/env.js";
 import routes from "./routes/index.js";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
@@ -24,9 +24,7 @@ export function createApp() {
   app.use(
     cors({
       origin(origin, done) {
-        if (!origin) return done(null, true);
-        const normalized = origin.replace(/\/$/, "");
-        if (config.clientOrigins.includes(normalized)) return done(null, true);
+        if (isAllowedClientOrigin(origin)) return done(null, true);
         return done(null, false);
       },
       credentials: true,

@@ -24,6 +24,33 @@ function list(value) {
     .filter(Boolean);
 }
 
+const clientOrigins = list(
+  process.env.CLIENT_ORIGIN ||
+    "http://localhost:5173,http://localhost:5174,http://localhost:4173,https://pos-software-ecru.vercel.app"
+);
+
+/** Local Vite (any port) + configured CLIENT_ORIGIN + known live frontend. */
+export function isAllowedClientOrigin(origin) {
+  if (!origin) return true;
+  const normalized = String(origin).trim().replace(/\/$/, "");
+  if (!normalized) return true;
+
+  if (clientOrigins.includes(normalized)) return true;
+
+  // Vite often hops to 5174/5175 when 5173 is busy; proxy still sends Origin.
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalized)) return true;
+
+  // Live Vercel app + preview deployments for this project.
+  if (
+    normalized === "https://pos-software-ecru.vercel.app" ||
+    /^https:\/\/pos-software[\w-]*\.vercel\.app$/i.test(normalized)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export const config = {
   env: process.env.NODE_ENV || "development",
   isProd: process.env.NODE_ENV === "production",
@@ -35,7 +62,7 @@ export const config = {
     cookieName: process.env.COOKIE_NAME || "sm_token",
     cookieMaxAge: 1000 * 60 * 60 * 24 * 7,
   },
-  clientOrigins: list(process.env.CLIENT_ORIGIN || "http://localhost:5173"),
+  clientOrigins,
   paths: {
     serverRoot,
     uploads: path.join(serverRoot, "uploads"),

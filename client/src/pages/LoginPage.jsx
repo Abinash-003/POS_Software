@@ -13,7 +13,6 @@ import { useLanguage } from "../i18n/LanguageProvider.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
 import { useErrorMessage } from "../hooks/useApiError.js";
-import { markShopEntrance } from "../components/ui/ShopEntrance.jsx";
 import { LanguageToggle } from "../components/layout/LanguageToggle.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { Input, PasswordInput } from "../components/ui/Field.jsx";
@@ -60,7 +59,6 @@ export function LoginPage() {
         username: form.username.trim().toLowerCase(),
         password: form.password,
       });
-      markShopEntrance({ name: user.name || user.username || "" });
       toast.success(t("auth.loggedIn"), `${t("auth.welcome")}, ${user.name || user.username}`);
     } catch (error) {
       const { title } = describe(error);

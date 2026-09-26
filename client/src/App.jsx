@@ -5,7 +5,6 @@ import { useAuth } from "./context/AuthContext.jsx";
 import { useToast } from "./context/ToastContext.jsx";
 import { SettingsProvider } from "./context/SettingsContext.jsx";
 import { SplashScreen } from "./components/ui/Spinner.jsx";
-import { ShopEntranceGate } from "./components/ui/ShopEntrance.jsx";
 import { AppLayout } from "./components/layout/AppLayout.jsx";
 import { LoginPage } from "./pages/LoginPage.jsx";
 
@@ -76,9 +75,7 @@ export function App() {
         element={
           <RequireAuth>
             <SettingsProvider>
-              <ShopEntranceGate>
-                <AppLayout />
-              </ShopEntranceGate>
+              <AppLayout />
             </SettingsProvider>
           </RequireAuth>
         }

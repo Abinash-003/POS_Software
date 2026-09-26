@@ -268,63 +268,6 @@
   }
 }
 
-/* --------------------- post-login shop entrance --------------------- */
-@keyframes shop-door-left {
-  0% {
-    transform: translateX(0);
-  }
-  18% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-102%);
-  }
-}
-
-@keyframes shop-door-right {
-  0% {
-    transform: translateX(0);
-  }
-  18% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(102%);
-  }
-}
-
-@keyframes shop-content-in {
-  0%,
-  22% {
-    opacity: 0;
-    transform: translateY(14px) scale(0.94);
-  }
-  45% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes shop-progress {
-  0% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes shop-overlay-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
 /* ----------------------------- 3D shop logo ---------------------------- */
 @keyframes shop-logo-float {
   0%,
@@ -424,41 +367,6 @@
   }
 }
 
-.shop-door {
-  z-index: 2;
-  will-change: transform;
-  box-shadow: inset 0 0 40px rgba(4, 92, 160, 0.35);
-}
-
-.shop-door-left {
-  animation: shop-door-left 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  border-right: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.shop-door-right {
-  animation: shop-door-right 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  border-left: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.shop-entrance-content {
-  animation: shop-content-in 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.shop-entrance-progress {
-  transform-origin: left center;
-  animation: shop-progress 1.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
-  transform: scaleX(0);
-}
-
-.shop-entrance-enter {
-  opacity: 1;
-}
-
-.shop-entrance-leave {
-  animation: shop-overlay-out 0.4s ease forwards;
-  pointer-events: none;
-}
-
 @media print {
   body {
     background: #ffffff;
@@ -484,14 +392,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-door-left,
-  .shop-door-right,
-  .shop-entrance-content,
-  .shop-entrance-progress {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0ms !important;
-  }
-
   *,
   *::before,
   *::after {
