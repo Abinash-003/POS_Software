@@ -24,8 +24,10 @@ export function createApp() {
   app.use(
     cors({
       origin(origin, done) {
-        if (!origin || config.clientOrigins.includes(origin)) return done(null, true);
-        return done(new Error("Origin not allowed by CORS"));
+        if (!origin) return done(null, true);
+        const normalized = origin.replace(/\/$/, "");
+        if (config.clientOrigins.includes(normalized)) return done(null, true);
+        return done(null, false);
       },
       credentials: true,
     })

@@ -20,7 +20,7 @@ function required(name) {
 function list(value) {
   return String(value || "")
     .split(",")
-    .map((item) => item.trim())
+    .map((item) => item.trim().replace(/\/$/, ""))
     .filter(Boolean);
 }
 
