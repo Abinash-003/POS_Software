@@ -82,15 +82,8 @@ export function LoginPage() {
 
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="shop-logo-3d shop-logo-float relative inline-grid size-12 shrink-0 place-items-center">
-              <span className="shop-logo-3d-glow" />
-              <span className="shop-logo-3d-face">
-                <span className="shop-logo-3d-fallback">
-                  <HiOutlineShoppingCart className="size-[55%]" aria-hidden="true" />
-                </span>
-                <span className="shop-logo-3d-gloss" />
-                <span className="shop-logo-3d-rim" />
-              </span>
+            <span className="grid size-12 place-items-center rounded-2xl bg-white text-ink-900">
+              <HiOutlineShoppingCart className="size-6" aria-hidden="true" />
             </span>
             <div>
               <p className="font-display text-lg font-bold tracking-tight">{t("app.name")}</p>
@@ -138,17 +131,8 @@ export function LoginPage() {
         <div className="relative flex flex-1 items-center justify-center px-4 pb-10">
           <div className="w-full max-w-sm animate-slide-up">
             <div className="text-center lg:text-left">
-              <span className="mx-auto inline-flex lg:mx-0">
-                <span className="shop-logo-3d shop-logo-float relative inline-grid size-14 shrink-0 place-items-center">
-                  <span className="shop-logo-3d-glow" />
-                  <span className="shop-logo-3d-face">
-                    <span className="shop-logo-3d-fallback">
-                      <HiOutlineShoppingCart className="size-[55%]" aria-hidden="true" />
-                    </span>
-                    <span className="shop-logo-3d-gloss" />
-                    <span className="shop-logo-3d-rim" />
-                  </span>
-                </span>
+              <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-ink-900 text-white lg:mx-0">
+                <HiOutlineShoppingCart className="size-7" aria-hidden="true" />
               </span>
               <h1 className="mt-4 font-display text-2xl font-bold tracking-tight text-ink-900 sm:text-[28px]">
                 {t("auth.loginTitle")}

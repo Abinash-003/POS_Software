@@ -3,6 +3,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -52,13 +53,17 @@ function TrendChart({ data, language, t }) {
   }
 
   return (
-    <div className="h-52 w-full px-1 pb-1 pt-3">
+    <div className="h-56 w-full px-1 pb-1 pt-3">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 4, right: 8, left: -18, bottom: 0 }}>
           <defs>
             <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#0d91e8" stopOpacity={0.28} />
               <stop offset="100%" stopColor="#0d91e8" stopOpacity={0.02} />
+            </linearGradient>
+            <linearGradient id="profitFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#109d6e" stopOpacity={0.26} />
+              <stop offset="100%" stopColor="#109d6e" stopOpacity={0.02} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke="#e6eff7" vertical={false} />
@@ -86,13 +91,28 @@ function TrendChart({ data, language, t }) {
               boxShadow: "0 8px 24px -12px rgba(20,36,52,0.2)",
             }}
           />
+          <Legend
+            formatter={(key) => t(`dashboard.${key}`)}
+            wrapperStyle={{ fontSize: 12, paddingTop: 4 }}
+          />
           <Area
             type="monotone"
             dataKey="revenue"
+            name="revenue"
             stroke="#0d91e8"
             strokeWidth={2.5}
             fill="url(#revenueFill)"
-            dot={{ r: 3, fill: "#0d91e8" }}
+            dot={{ r: 3, fill: "#0d91e8", strokeWidth: 0 }}
+            activeDot={{ r: 5 }}
+          />
+          <Area
+            type="monotone"
+            dataKey="profit"
+            name="profit"
+            stroke="#109d6e"
+            strokeWidth={2.5}
+            fill="url(#profitFill)"
+            dot={{ r: 3, fill: "#109d6e", strokeWidth: 0 }}
             activeDot={{ r: 5 }}
           />
         </AreaChart>
@@ -203,7 +223,7 @@ export function DashboardPage() {
         <Card className="lg:col-span-3">
           <CardHeader
             title={t("dashboard.weekTrend")}
-            subtitle={t("dashboard.revenue")}
+            subtitle={`${t("dashboard.revenue")} · ${t("dashboard.profit")}`}
             icon={HiOutlineArrowTrendingUp}
             action={
               isInitialLoading ? null : (
@@ -213,6 +233,9 @@ export function DashboardPage() {
                   </p>
                   <p className="text-sm font-bold tabular text-ink-900">
                     {money(data.week.revenue, { compact: true })}
+                  </p>
+                  <p className="text-xs font-semibold tabular text-success-600">
+                    {money(data.week.grossProfit, { compact: true })}
                   </p>
                 </div>
               )

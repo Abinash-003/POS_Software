@@ -140,7 +140,7 @@ export function AppLayout() {
         <div className="flex items-center gap-2.5 px-4 py-4">
           <ShopLogo logo={settings.logo} size="md" />
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-ink-900">{shopName}</p>
+            <p className="truncate text-sm font-extrabold tracking-tight text-ink-900">{shopName}</p>
             {shopTagline ? (
               <p className="mt-0.5 line-clamp-2 text-[11px] font-medium leading-snug text-ink-500">
                 {shopTagline}
@@ -174,7 +174,7 @@ export function AppLayout() {
         <header className="print-hidden sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur lg:hidden">
           <div className="flex h-14 items-center gap-2.5 px-3.5">
             <ShopLogo logo={settings.logo} size="sm" />
-            <p className="min-w-0 flex-1 truncate text-[15px] font-bold text-ink-900">{shopName}</p>
+            <p className="min-w-0 flex-1 truncate text-[15px] font-extrabold tracking-tight text-ink-900">{shopName}</p>
             <LanguageToggle />
           </div>
         </header>
